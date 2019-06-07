@@ -1,5 +1,6 @@
 import pygame
 import random
+MAX=625
 class Food:
     def __init__(self,x,y):
         self.posx=random.randint(0,25)
@@ -13,32 +14,30 @@ class Snake:
     
     global accum
     def __init__(self,x,y):
-         self.posx=x
-         self.posy=y
-         self.velx=0
-         self.vely=0
+         self.pos=[x,y]
+         self.vel=[0,0]
          self.gameover=False
     def update(self):   
-         self.posx+=self.velx
-         self.posy+=self.vely
-         if((food.posx==self.posx) and (food.posy == self.posy)):
+         self.pos[0]+=self.vel[0]
+         self.pos[1]+=self.vel[1]
+         if((food.posx==self.pos[0]) and (food.posy == self.pos[1])):
              food.reset()
-         if (self.posx>24):
+         if (self.pos[0]>24):
              self.gameover=True
-         if (self.posx<0):
+         if (self.pos[0]<0):
              self.gameover=True
-         if (self.posy>24):
+         if (self.pos[1]>24):
              self.gameover=True
-         if (self.posy<0):
+         if (self.pos[1]<0):
              self.gameover=True
     def draw(self,renderer):
-         pygame.draw.rect(renderer,BLACK,(20*self.posx,20*self.posy,20,20))
+         pygame.draw.rect(renderer,BLACK,(20*self.pos[0],20*self.pos[1],20,20))
 
     def reset(self):
-        self.posx=0
-        self.posy=0
-        self.velx=0
-        self.vely=0
+        self.pos[0]=0
+        self.pos[1]=0
+        self.vel[0]=0
+        self.vel[1]=0
         self.gameover=False
 
 pygame.init()
@@ -63,17 +62,13 @@ while (isRunning):
         if key[pygame.K_ESCAPE]:
             isRunning=False
         if key[pygame.K_RIGHT]:
-            snake.velx=1
-            snake.vely=0
+            snake.vel=[1,0]
         if key[pygame.K_LEFT]:
-            snake.velx=-1
-            snake.vely=0
+            snake.vel=[-1,0]
         if key[pygame.K_UP]:
-            snake.velx=0
-            snake.vely=-1    
+           snake.vel=[0,-1]  
         if key[pygame.K_DOWN]:
-            snake.velx=0
-            snake.vely=1 
+           snake.vel=[0,1]
 
     renderer.fill(WHITE)
     if timeelapsed>100:
