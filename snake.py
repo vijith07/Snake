@@ -1,13 +1,14 @@
 import pygame
 import random
+import numpy as np
 MAX=625
 class Food:
     def __init__(self,x,y):
-        self.posx=random.randint(0,25)
-        self.posy=random.randint(0,25)
+        self.posx=random.randint(0,24)
+        self.posy=random.randint(0,24)
     def reset(self):
-        self.posx=random.randint(0,25)
-        self.posy=random.randint(0,25)
+        self.posx=random.randint(0,24)
+        self.posy=random.randint(0,24)
     def draw(self,renderer):
          pygame.draw.rect(renderer,RED,(20*self.posx,20*self.posy,20,20))
 class Snake:
@@ -17,11 +18,21 @@ class Snake:
          self.pos=[x,y]
          self.vel=[0,0]
          self.gameover=False
-    def update(self):   
+         self.tail = np.empty(shape=(MAX,2))
+         self.tailstart=0
+         self.tailend=0
+         self.taillen=0
+    def update(self):
+         self.tailstart += 1
+         self.tail[self.tailend%MAX]=self.pos
+         self.tailend += 1
          self.pos[0]+=self.vel[0]
          self.pos[1]+=self.vel[1]
          if((food.posx==self.pos[0]) and (food.posy == self.pos[1])):
              food.reset()
+             self.taillen += 1
+             #print(self.taillen)
+             self.tailstart -= 1
          if (self.pos[0]>24):
              self.gameover=True
          if (self.pos[0]<0):
@@ -30,14 +41,28 @@ class Snake:
              self.gameover=True
          if (self.pos[1]<0):
              self.gameover=True
+        
+         for i in range(self.taillen):
+             tailpos=self.tail[(self.tailstart+i)%MAX]
+             if(tailpos[0]==food.posx and tailpos[1]==food.posy):
+                 food.reset()
+             if(tailpos[0]==self.pos[0] and tailpos[1]==self.pos[1]):
+                 self.reset()
+
+         
     def draw(self,renderer):
          pygame.draw.rect(renderer,BLACK,(20*self.pos[0],20*self.pos[1],20,20))
-
+         for i in range(self.taillen):
+             tailpos=self.tail[(self.tailstart+i)%MAX]
+             pygame.draw.rect(renderer,BLACK,(20*tailpos[0],20*tailpos[1],20,20))
+             
     def reset(self):
         self.pos[0]=0
         self.pos[1]=0
         self.vel[0]=0
         self.vel[1]=0
+        self.tailstart=self.tailend
+        self.taillen=0
         self.gameover=False
 
 pygame.init()
@@ -51,7 +76,7 @@ BLACK=(0,0,0)
 renderer.fill(WHITE)
 isRunning=True
 snake = Snake(0,0)
-food = Food(20,20)
+food = Food(24,24)
 while (isRunning):
     deltatime = clock.tick()
     timeelapsed+=deltatime
