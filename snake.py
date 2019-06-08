@@ -66,6 +66,7 @@ class Snake:
         self.gameover=False
 
 pygame.init()
+font=pygame.font.Font(pygame.font.get_default_font(), 15)
 timeelapsed=0
 clock=pygame.time.Clock()
 renderer=pygame.display.set_mode((500,500))
@@ -86,13 +87,13 @@ while (isRunning):
         key=pygame.key.get_pressed()
         if key[pygame.K_ESCAPE]:
             isRunning=False
-        if key[pygame.K_RIGHT]:
+        if key[pygame.K_RIGHT] and snake.vel != [-1,0]:
             snake.vel=[1,0]
-        if key[pygame.K_LEFT]:
+        if key[pygame.K_LEFT] and snake.vel != [1,0]:
             snake.vel=[-1,0]
-        if key[pygame.K_UP]:
+        if key[pygame.K_UP] and snake.vel != [0,1]:
            snake.vel=[0,-1]  
-        if key[pygame.K_DOWN]:
+        if key[pygame.K_DOWN] and snake.vel != [0,-1]:
            snake.vel=[0,1]
 
     renderer.fill(WHITE)
@@ -100,9 +101,12 @@ while (isRunning):
         snake.update()
         timeelapsed=0
     if(not snake.gameover):
+        text=font.render("score: "+str(snake.taillen),True,(30,30,130))
+        renderer.blit(text,(500-text.get_width(),0))
         snake.draw(renderer)   
         food.draw(renderer)
     else:
+        
         snake.reset()
         food.reset()
     pygame.display.update()
