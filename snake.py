@@ -1,3 +1,5 @@
+
+
 import pygame
 import random
 import numpy as np
@@ -99,7 +101,7 @@ while (isRunning):
     if timeelapsed>100:
         snake.update()
         timeelapsed=0
-    if(not snake.gameover):
+    if not snake.gameover:
         snake.draw(renderer)   
         food.draw(renderer)
     else:
