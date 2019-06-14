@@ -3,7 +3,7 @@
 Snake game made in python using pygame
 
 
-![](Capture.gif)
+<img src="Capture.gif" alt="drawing" width="200"/>
 ## Getting Started
 
 Run the ```/snake.py``` file using python3 to play the game 
